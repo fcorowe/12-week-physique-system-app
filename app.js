@@ -295,6 +295,9 @@ function registerServiceWorker() {
 function showView(id) {
   navButtons.forEach((button) => button.classList.toggle("active", button.dataset.view === id));
   views.forEach((view) => view.classList.toggle("active-view", view.id === id));
+  const activeButton = navButtons.find((button) => button.dataset.view === id);
+  activeButton?.scrollIntoView({ block: "nearest", inline: "center" });
+  window.scrollTo({ top: 0, left: 0, behavior: "auto" });
 }
 
 function renderAll() {

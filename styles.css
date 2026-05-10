@@ -305,6 +305,7 @@ button {
   border-radius: 8px;
   padding: 12px;
   background: #fbfcfa;
+  text-align: left;
 }
 
 .session-row.active-day {
