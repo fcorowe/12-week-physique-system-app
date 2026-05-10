@@ -1481,6 +1481,11 @@ function cloudAuthValues() {
   };
 }
 
+function cloudRedirectUrl() {
+  const path = location.pathname.endsWith("/") ? location.pathname : location.pathname.replace(/\/[^/]*$/, "/");
+  return `${location.origin}${path}`;
+}
+
 async function handleCloudSignin() {
   try {
     const { email, password } = cloudAuthValues();
@@ -1499,12 +1504,16 @@ async function handleCloudSignin() {
 async function handleCloudSignup() {
   try {
     const { email, password } = cloudAuthValues();
-    const { data, error } = await getCloudClient().auth.signUp({ email, password });
+    const { data, error } = await getCloudClient().auth.signUp({
+      email,
+      password,
+      options: { emailRedirectTo: cloudRedirectUrl() },
+    });
     if (error) throw error;
     cloudUser = data.user;
     cloudConfig.email = email;
     saveCloudConfig();
-    cloudStatus = "Account created. If email confirmation is enabled, confirm the email before signing in.";
+    cloudStatus = "Account created. If email confirmation is enabled, confirm the email, then return here to sign in.";
   } catch (error) {
     cloudStatus = error.message;
   }
