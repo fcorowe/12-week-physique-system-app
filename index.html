@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#17221f">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Physique">
+    <title>12-Week Physique System</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="icon.svg">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="App navigation">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true">12</span>
+          <div>
+            <h1>Physique System</h1>
+            <p>Local coaching app</p>
+          </div>
+        </div>
+
+        <nav class="nav-list">
+          <button class="nav-button active" type="button" data-view="dashboard">Dashboard</button>
+          <button class="nav-button" type="button" data-view="plan">Plan</button>
+          <button class="nav-button" type="button" data-view="training">Training</button>
+          <button class="nav-button" type="button" data-view="nutrition">Nutrition</button>
+          <button class="nav-button" type="button" data-view="cloud">Cloud</button>
+          <button class="nav-button" type="button" data-view="checkin">Check-in</button>
+          <button class="nav-button" type="button" data-view="tracking">Tracking</button>
+          <button class="nav-button" type="button" data-view="logs">Logs</button>
+          <button class="nav-button" type="button" data-view="docs">Docs</button>
+        </nav>
+
+        <div class="sidebar-footer">
+          <label for="week-select">Active week</label>
+          <select id="week-select"></select>
+          <p>Training days: Tue, Thu, Sat, Sun</p>
+        </div>
+      </aside>
+
+      <main class="main">
+        <section class="topbar" aria-label="Plan summary">
+          <div>
+            <p class="eyebrow">12-week target</p>
+            <h2>Leaner, fuller, closer to the target photo</h2>
+          </div>
+          <div class="target-strip">
+            <span>2350 kcal</span>
+            <span>160-180 g protein</span>
+            <span>10k-12k steps</span>
+          </div>
+        </section>
+
+        <section id="dashboard" class="view active-view"></section>
+        <section id="plan" class="view"></section>
+        <section id="training" class="view"></section>
+        <section id="nutrition" class="view"></section>
+        <section id="cloud" class="view"></section>
+        <section id="checkin" class="view"></section>
+        <section id="tracking" class="view"></section>
+        <section id="logs" class="view"></section>
+        <section id="docs" class="view"></section>
+      </main>
+    </div>
+
+    <template id="field-template">
+      <label class="field">
+        <span></span>
+        <input type="text">
+      </label>
+    </template>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
