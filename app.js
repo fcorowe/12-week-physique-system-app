@@ -46,6 +46,50 @@ const plan = {
       note: "Use the upper end when Hyrox-like work is hard or run/erg volume is high.",
     },
   ],
+  mealMacroSplits: [
+    {
+      title: "Tuesday + Thursday training days",
+      target: "About 2,450 kcal: 175 g protein, 315 g carbs, 55 g fat",
+      cue: "Use the afternoon snack as the main pre-workout meal and dinner as the main post-workout meal.",
+      rows: [
+        ["Breakfast", "35 g", "55 g", "15 g"],
+        ["Morning snack", "20 g", "35 g", "5 g"],
+        ["Lunch", "35 g", "65 g", "12 g"],
+        ["Afternoon snack", "30 g", "80 g", "5 g"],
+        ["Dinner", "35 g", "65 g", "15 g"],
+        ["Evening snack", "20 g", "15 g", "3 g"],
+        ["Total", "175 g", "315 g", "55 g"],
+      ],
+    },
+    {
+      title: "Saturday + Sunday morning training days",
+      target: "About 2,450 kcal: 175 g protein, 315 g carbs, 55 g fat",
+      cue: "Use breakfast as the main pre-workout meal and the morning snack as the main post-workout meal.",
+      rows: [
+        ["Breakfast", "35 g", "75 g", "15 g"],
+        ["Morning snack", "30 g", "65 g", "5 g"],
+        ["Lunch", "35 g", "55 g", "10 g"],
+        ["Afternoon snack", "25 g", "50 g", "7 g"],
+        ["Dinner", "35 g", "50 g", "15 g"],
+        ["Evening snack", "15 g", "20 g", "3 g"],
+        ["Total", "175 g", "315 g", "55 g"],
+      ],
+    },
+    {
+      title: "Non-training days",
+      target: "About 2,275 kcal: 175 g protein, 245 g carbs, 66 g fat",
+      cue: "Keep the same meal rhythm, let fats rise slightly, and bring carbs down.",
+      rows: [
+        ["Breakfast", "35 g", "45 g", "15 g"],
+        ["Morning snack", "20 g", "25 g", "8 g"],
+        ["Lunch", "40 g", "50 g", "15 g"],
+        ["Afternoon snack", "25 g", "45 g", "8 g"],
+        ["Dinner", "40 g", "55 g", "17 g"],
+        ["Evening snack", "15 g", "25 g", "3 g"],
+        ["Total", "175 g", "245 g", "66 g"],
+      ],
+    },
+  ],
   sessions: [
     {
       day: "Tuesday",
@@ -366,6 +410,7 @@ function renderPlan() {
           <li><strong>Protein</strong><span>160-180 g/day.</span></li>
           <li><strong>Fat</strong><span>55-70 g/day.</span></li>
           <li><strong>Carbs</strong><span>Remainder, with the main training carbs placed in the meal before and after training.</span></li>
+          <li><strong>Meal split</strong><span>Use the suggested six-meal macro split in the Nutrition tab.</span></li>
         </ul>
       </article>
     </div>
@@ -411,22 +456,53 @@ function renderPlan() {
 
 function workoutFuelingTable() {
   return `
-    <table class="exercise-table">
+    <table class="exercise-table responsive-table">
       <thead>
         <tr><th>Day</th><th>Training</th><th>Before</th><th>After</th><th>Note</th></tr>
       </thead>
       <tbody>
         ${plan.workoutFueling.map((item) => `
           <tr>
-            <td><strong>${item.days}</strong></td>
-            <td>${item.time}</td>
-            <td><strong>${item.beforeMeal}</strong><br>${item.beforeMacros}</td>
-            <td><strong>${item.afterMeal}</strong><br>${item.afterMacros}</td>
-            <td>${item.note}</td>
+            <td data-label="Day"><strong>${item.days}</strong></td>
+            <td data-label="Training">${item.time}</td>
+            <td data-label="Before"><strong>${item.beforeMeal}</strong><br>${item.beforeMacros}</td>
+            <td data-label="After"><strong>${item.afterMeal}</strong><br>${item.afterMacros}</td>
+            <td data-label="Note">${item.note}</td>
           </tr>
         `).join("")}
       </tbody>
     </table>
+  `;
+}
+
+function mealMacroSplitSections() {
+  return `
+    <div class="macro-split-list">
+      ${plan.mealMacroSplits.map((split) => `
+        <section class="macro-split">
+          <div>
+            <h3>${split.title}</h3>
+            <p>${split.target}</p>
+            <p class="muted">${split.cue}</p>
+          </div>
+          <table class="exercise-table responsive-table compact-table">
+            <thead>
+              <tr><th>Meal</th><th>Protein</th><th>Carbs</th><th>Fat</th></tr>
+            </thead>
+            <tbody>
+              ${split.rows.map(([meal, protein, carbs, fat]) => `
+                <tr class="${meal === "Total" ? "total-row" : ""}">
+                  <th data-label="Meal">${meal}</th>
+                  <td data-label="Protein">${protein}</td>
+                  <td data-label="Carbs">${carbs}</td>
+                  <td data-label="Fat">${fat}</td>
+                </tr>
+              `).join("")}
+            </tbody>
+          </table>
+        </section>
+      `).join("")}
+    </div>
   `;
 }
 
@@ -550,10 +626,10 @@ function readinessBlock(day) {
 
 function exerciseTable(exercises) {
   return `
-    <table class="exercise-table">
+    <table class="exercise-table responsive-table">
       <thead><tr><th>Exercise</th><th>Prescription</th></tr></thead>
       <tbody>
-        ${exercises.map(([name, details]) => `<tr><td><strong>${name}</strong></td><td>${details}</td></tr>`).join("")}
+        ${exercises.map(([name, details]) => `<tr><td data-label="Exercise"><strong>${name}</strong></td><td data-label="Prescription">${details}</td></tr>`).join("")}
       </tbody>
     </table>
   `;
@@ -593,9 +669,9 @@ function setRow(exerciseIndex, setIndex, row) {
   return `
     <div class="set-row">
       <span class="set-number">${setIndex + 1}</span>
-      <input class="set-input" type="text" inputmode="decimal" data-exercise-index="${exerciseIndex}" data-set-index="${setIndex}" data-set-field="weight" value="${escapeHtml(row.weight || "")}" aria-label="Set ${setIndex + 1} weight">
-      <input class="set-input" type="text" inputmode="numeric" data-exercise-index="${exerciseIndex}" data-set-index="${setIndex}" data-set-field="reps" value="${escapeHtml(row.reps || "")}" aria-label="Set ${setIndex + 1} reps">
-      <input class="set-input" type="text" inputmode="decimal" data-exercise-index="${exerciseIndex}" data-set-index="${setIndex}" data-set-field="rpe" value="${escapeHtml(row.rpe || "")}" aria-label="Set ${setIndex + 1} RPE">
+      <input class="set-input" type="text" inputmode="decimal" placeholder="Weight" data-exercise-index="${exerciseIndex}" data-set-index="${setIndex}" data-set-field="weight" value="${escapeHtml(row.weight || "")}" aria-label="Set ${setIndex + 1} weight">
+      <input class="set-input" type="text" inputmode="numeric" placeholder="Reps" data-exercise-index="${exerciseIndex}" data-set-index="${setIndex}" data-set-field="reps" value="${escapeHtml(row.reps || "")}" aria-label="Set ${setIndex + 1} reps">
+      <input class="set-input" type="text" inputmode="decimal" placeholder="RPE" data-exercise-index="${exerciseIndex}" data-set-index="${setIndex}" data-set-field="rpe" value="${escapeHtml(row.rpe || "")}" aria-label="Set ${setIndex + 1} RPE">
       <label class="done-toggle">
         <input type="checkbox" data-exercise-index="${exerciseIndex}" data-set-index="${setIndex}" data-set-field="done" ${row.done ? "checked" : ""}>
         <span>Done</span>
@@ -774,26 +850,31 @@ function renderNutrition() {
     <div class="grid two">
       <article class="card">
         <h2 class="section-title">Macro Setup</h2>
-        <table class="exercise-table">
+        <table class="exercise-table responsive-table key-table">
           <tbody>
-            <tr><th>Current intake baseline</th><td>2,360 kcal/day; 200 g protein; 278 g carbs; 57 g fat; 34 g fiber</td></tr>
-            <tr><th>Training-day calories</th><td>2,400-2,500 kcal on Tuesday, Thursday, Saturday, and Sunday</td></tr>
-            <tr><th>Non-training-day calories</th><td>2,200-2,300 kcal on Monday, Wednesday, and Friday</td></tr>
-            <tr><th>Carb target</th><td>Remainder of calories, usually about 240-330 g/day</td></tr>
-            <tr><th>Training carbs</th><td>Put the main carb dose in the meal before and after training</td></tr>
-            <tr><th>Steps</th><td>10,000-12,000/day; do not chase above 12,000</td></tr>
+            <tr><th data-label="Target">Current intake baseline</th><td data-label="Details">2,360 kcal/day; 200 g protein; 278 g carbs; 57 g fat; 34 g fiber</td></tr>
+            <tr><th data-label="Target">Training-day calories</th><td data-label="Details">2,400-2,500 kcal on Tuesday, Thursday, Saturday, and Sunday</td></tr>
+            <tr><th data-label="Target">Non-training-day calories</th><td data-label="Details">2,200-2,300 kcal on Monday, Wednesday, and Friday</td></tr>
+            <tr><th data-label="Target">Carb target</th><td data-label="Details">Remainder of calories, usually about 240-330 g/day</td></tr>
+            <tr><th data-label="Target">Training carbs</th><td data-label="Details">Put the main carb dose in the meal before and after training</td></tr>
+            <tr><th data-label="Target">Steps</th><td data-label="Details">10,000-12,000/day; do not chase above 12,000</td></tr>
           </tbody>
         </table>
       </article>
       <article class="card">
         <h2 class="section-title">Meal Structure</h2>
-        <table class="exercise-table">
+        <table class="exercise-table responsive-table key-table">
           <tbody>
-            ${plan.meals.map((meal) => `<tr><th>${meal}</th><td>${meal === "Afternoon snack" ? "Tue/Thu: use as the pre-workout snack." : meal === "Morning snack" ? "Sat/Sun: use as the post-workout snack." : meal === "Breakfast" ? "Sat/Sun: use as the pre-workout meal." : "Use as a consistent meal slot."}</td></tr>`).join("")}
+            ${plan.meals.map((meal) => `<tr><th data-label="Meal">${meal}</th><td data-label="Use">${meal === "Afternoon snack" ? "Tue/Thu: use as the pre-workout snack." : meal === "Morning snack" ? "Sat/Sun: use as the post-workout snack." : meal === "Breakfast" ? "Sat/Sun: use as the pre-workout meal." : "Use as a consistent meal slot."}</td></tr>`).join("")}
           </tbody>
         </table>
       </article>
     </div>
+    <article class="card">
+      <h2 class="section-title">Suggested Meal Macro Split</h2>
+      ${mealMacroSplitSections()}
+      <p class="note">These are planning templates. The daily macro total matters more than hitting every meal exactly, but the pattern keeps protein evenly spread and puts more carbohydrate around training.</p>
+    </article>
     <article class="card">
       <h2 class="section-title">Workout Fueling</h2>
       ${workoutFuelingTable()}
@@ -878,15 +959,15 @@ function importedNutritionSummary(summary) {
       ${metricCard("Training days", formatNumber(summary.training.averageCalories), "Calories/day")}
       ${metricCard("Non-training days", formatNumber(summary.nonTraining.averageCalories), "Calories/day")}
     </div>
-    <table class="exercise-table compact-table">
+    <table class="exercise-table responsive-table compact-table key-table">
       <tbody>
-        <tr><th>Protein</th><td>${formatNumber(summary.averages.protein)} g/day</td></tr>
-        <tr><th>Carbs</th><td>${formatNumber(summary.averages.carbs)} g/day</td></tr>
-        <tr><th>Fat</th><td>${formatNumber(summary.averages.fat)} g/day</td></tr>
-        <tr><th>Fiber</th><td>${formatNumber(summary.averages.fiber)} g/day</td></tr>
-        <tr><th>Training pre-workout carbs</th><td>${formatNumber(summary.training.averagePreWorkoutCarbs)} g/day</td></tr>
-        <tr><th>Training post-workout carbs</th><td>${formatNumber(summary.training.averagePostWorkoutCarbs)} g/day</td></tr>
-        <tr><th>Latest day</th><td>${summary.latestDay.date}: ${formatNumber(summary.latestDay.calories)} kcal, ${formatNumber(summary.latestDay.protein)} g protein</td></tr>
+        <tr><th data-label="Metric">Protein</th><td data-label="Value">${formatNumber(summary.averages.protein)} g/day</td></tr>
+        <tr><th data-label="Metric">Carbs</th><td data-label="Value">${formatNumber(summary.averages.carbs)} g/day</td></tr>
+        <tr><th data-label="Metric">Fat</th><td data-label="Value">${formatNumber(summary.averages.fat)} g/day</td></tr>
+        <tr><th data-label="Metric">Fiber</th><td data-label="Value">${formatNumber(summary.averages.fiber)} g/day</td></tr>
+        <tr><th data-label="Metric">Training pre-workout carbs</th><td data-label="Value">${formatNumber(summary.training.averagePreWorkoutCarbs)} g/day</td></tr>
+        <tr><th data-label="Metric">Training post-workout carbs</th><td data-label="Value">${formatNumber(summary.training.averagePostWorkoutCarbs)} g/day</td></tr>
+        <tr><th data-label="Metric">Latest day</th><td data-label="Value">${summary.latestDay.date}: ${formatNumber(summary.latestDay.calories)} kcal, ${formatNumber(summary.latestDay.protein)} g protein</td></tr>
       </tbody>
     </table>
   `;

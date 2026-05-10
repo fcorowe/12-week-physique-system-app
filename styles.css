@@ -52,6 +52,7 @@ button {
   display: grid;
   grid-template-columns: 280px minmax(0, 1fr);
   min-height: 100vh;
+  min-width: 0;
 }
 
 .sidebar {
@@ -64,6 +65,7 @@ button {
   padding: 24px;
   background: #17221f;
   color: #f6fbf8;
+  min-width: 0;
 }
 
 .brand {
@@ -165,6 +167,7 @@ button {
   width: min(1180px, 100%);
   margin: 0 auto;
   padding: 28px;
+  min-width: 0;
 }
 
 .topbar {
@@ -243,6 +246,7 @@ button {
   padding: 18px;
   background: var(--surface);
   box-shadow: var(--shadow);
+  min-width: 0;
 }
 
 .card.flat {
@@ -539,6 +543,31 @@ button {
   margin-top: 10px;
 }
 
+.macro-split-list {
+  display: grid;
+  gap: 18px;
+}
+
+.macro-split {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+
+.macro-split h3 {
+  margin: 0 0 4px;
+}
+
+.macro-split p {
+  margin-bottom: 4px;
+}
+
+.total-row th,
+.total-row td {
+  color: var(--ink);
+  font-weight: 800;
+}
+
 .warning-list {
   margin-bottom: 0;
   padding-left: 20px;
@@ -743,36 +772,256 @@ button {
   .plan-list li {
     grid-template-columns: 1fr;
   }
+
+  #nutrition .form-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 560px) {
   .main,
   .sidebar {
-    padding: 18px;
+    padding: 14px;
+  }
+
+  .sidebar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    gap: 12px;
+    box-shadow: 0 8px 22px rgba(23, 34, 31, 0.18);
+  }
+
+  .brand {
+    gap: 10px;
+  }
+
+  .brand-mark {
+    width: 36px;
+    height: 36px;
+  }
+
+  .brand h1 {
+    font-size: 0.95rem;
+  }
+
+  .brand p,
+  .sidebar-footer p {
+    display: none;
   }
 
   .nav-list {
-    grid-template-columns: 1fr 1fr;
+    display: flex;
+    gap: 8px;
+    margin: 0 -14px;
+    padding: 0 14px 4px;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
   }
 
-  .session-row,
+  .nav-list::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav-button {
+    flex: 0 0 auto;
+    width: auto;
+    min-height: 40px;
+    padding: 9px 12px;
+    white-space: nowrap;
+  }
+
+  .target-strip span {
+    min-width: 0;
+    white-space: normal;
+  }
+
+  .sidebar-footer {
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    margin-top: 0;
+  }
+
+  .sidebar-footer select {
+    padding: 8px 10px;
+  }
+
+  .topbar {
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .topbar h2 {
+    font-size: 1.25rem;
+    overflow-wrap: anywhere;
+  }
+
+  .target-strip {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    justify-content: stretch;
+    width: 100%;
+  }
+
+  .active-view,
+  .grid {
+    gap: 14px;
+  }
+
+  .card {
+    padding: 14px;
+  }
+
+  .section-title {
+    font-size: 1rem;
+  }
+
+  .metric strong {
+    font-size: 1.16rem;
+    overflow-wrap: anywhere;
+  }
+
+  .plan-block {
+    gap: 10px;
+  }
+
+  .plan-list li {
+    gap: 4px;
+  }
+
+  .session-row {
+    grid-template-columns: 48px minmax(0, 1fr);
+    gap: 10px;
+    align-items: start;
+  }
+
+  .session-row .status {
+    grid-column: 2;
+    justify-self: start;
+    white-space: normal;
+  }
+
   .log-item,
   .exercise-log-header {
     grid-template-columns: 1fr;
     display: grid;
   }
 
-  .exercise-table {
+  .exercise-table.responsive-table {
     display: block;
-    overflow-x: auto;
+    overflow: visible;
+    border-radius: 0;
+  }
+
+  .exercise-table.responsive-table thead {
+    display: none;
+  }
+
+  .exercise-table.responsive-table tbody {
+    display: grid;
+    gap: 10px;
+  }
+
+  .exercise-table.responsive-table tr {
+    display: grid;
+    gap: 8px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 12px;
+    background: #fbfcfa;
+  }
+
+  .exercise-table.responsive-table th,
+  .exercise-table.responsive-table td {
+    display: grid;
+    grid-template-columns: minmax(86px, 0.42fr) minmax(0, 1fr);
+    gap: 8px;
+    min-width: 0;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    font-size: 0.9rem;
+  }
+
+  .exercise-table.responsive-table [data-label]::before {
+    content: attr(data-label);
+    color: var(--accent-dark);
+    font-size: 0.74rem;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  .exercise-table.responsive-table th {
+    color: var(--ink);
+  }
+
+  .exercise-table.responsive-table td {
+    color: var(--muted);
+  }
+
+  .exercise-table.responsive-table .total-row {
+    border-color: var(--accent);
+    background: var(--surface-alt);
   }
 
   .set-table {
-    overflow-x: auto;
-    padding-bottom: 4px;
+    overflow: visible;
+    padding-bottom: 0;
   }
 
   .set-row {
-    min-width: 620px;
+    grid-template-columns: 42px repeat(3, minmax(0, 1fr));
+    grid-template-areas:
+      "number weight reps rpe"
+      "number done done remove";
+    gap: 8px;
+    min-width: 0;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 10px;
+    background: #ffffff;
+  }
+
+  .set-row.set-head {
+    display: none;
+  }
+
+  .set-row .set-number {
+    grid-area: number;
+    align-self: stretch;
+  }
+
+  .set-row .set-input[data-set-field="weight"] {
+    grid-area: weight;
+  }
+
+  .set-row .set-input[data-set-field="reps"] {
+    grid-area: reps;
+  }
+
+  .set-row .set-input[data-set-field="rpe"] {
+    grid-area: rpe;
+  }
+
+  .set-row .done-toggle {
+    grid-area: done;
+    min-height: 36px;
+  }
+
+  .set-row [data-remove-set] {
+    grid-area: remove;
+    justify-self: end;
+  }
+
+  .button-row > button,
+  .button-row > .file-button {
+    flex: 1 1 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+  #nutrition .form-grid {
+    grid-template-columns: 1fr;
   }
 }

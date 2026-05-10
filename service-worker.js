@@ -1,4 +1,4 @@
-const CACHE_NAME = "physique-system-v2";
+const CACHE_NAME = "physique-system-v4";
 const APP_SHELL = [
   "./",
   "index.html",
