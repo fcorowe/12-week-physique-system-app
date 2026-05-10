@@ -317,6 +317,10 @@ button {
   display: block;
 }
 
+.session-row > div {
+  min-width: 0;
+}
+
 .session-row small {
   color: var(--muted);
 }
@@ -836,6 +840,7 @@ button {
   .target-strip span {
     min-width: 0;
     white-space: normal;
+    overflow-wrap: anywhere;
   }
 
   .sidebar-footer {
@@ -892,9 +897,13 @@ button {
   }
 
   .session-row {
-    grid-template-columns: 48px minmax(0, 1fr);
+    grid-template-columns: minmax(96px, auto) minmax(0, 1fr);
     gap: 10px;
     align-items: start;
+  }
+
+  #training .session-row {
+    grid-template-columns: 48px minmax(0, 1fr);
   }
 
   .session-row .status {
@@ -1027,6 +1036,12 @@ button {
   }
 
   #nutrition .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 360px) {
+  .target-strip {
     grid-template-columns: 1fr;
   }
 }
