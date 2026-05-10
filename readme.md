@@ -2,6 +2,12 @@
 
 This folder contains the static app for the 12-week physique system. It can run locally or be deployed to HTTPS hosting for phone access.
 
+Hosted app:
+
+```text
+https://fcorowe.github.io/12-week-physique-system-app/
+```
+
 ## Run
 
 From the repository root:
@@ -53,3 +59,5 @@ The app must be opened through the local server for the fixed-file import to wor
 ## Storage
 
 Saved logs stay in the current browser until you use the Cloud screen. Use Supabase sync for cross-device access and the export buttons for backups.
+
+The GitHub Pages version publishes only the static app shell. Do not commit private profile details, photos, logs, MyFitnessPal exports, Apple Health exports, or Supabase service-role keys into this folder.
