@@ -993,6 +993,10 @@ button {
     align-self: stretch;
   }
 
+  .set-row .set-input {
+    padding: 8px 6px;
+  }
+
   .set-row .set-input[data-set-field="weight"] {
     grid-area: weight;
   }

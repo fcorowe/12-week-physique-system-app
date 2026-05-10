@@ -672,7 +672,7 @@ function setRow(exerciseIndex, setIndex, row) {
   return `
     <div class="set-row">
       <span class="set-number">${setIndex + 1}</span>
-      <input class="set-input" type="text" inputmode="decimal" placeholder="Weight" data-exercise-index="${exerciseIndex}" data-set-index="${setIndex}" data-set-field="weight" value="${escapeHtml(row.weight || "")}" aria-label="Set ${setIndex + 1} weight">
+      <input class="set-input" type="text" inputmode="decimal" placeholder="Wt" data-exercise-index="${exerciseIndex}" data-set-index="${setIndex}" data-set-field="weight" value="${escapeHtml(row.weight || "")}" aria-label="Set ${setIndex + 1} weight">
       <input class="set-input" type="text" inputmode="numeric" placeholder="Reps" data-exercise-index="${exerciseIndex}" data-set-index="${setIndex}" data-set-field="reps" value="${escapeHtml(row.reps || "")}" aria-label="Set ${setIndex + 1} reps">
       <input class="set-input" type="text" inputmode="decimal" placeholder="RPE" data-exercise-index="${exerciseIndex}" data-set-index="${setIndex}" data-set-field="rpe" value="${escapeHtml(row.rpe || "")}" aria-label="Set ${setIndex + 1} RPE">
       <label class="done-toggle">
