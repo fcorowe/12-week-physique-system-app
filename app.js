@@ -218,9 +218,24 @@ function init() {
     button.addEventListener("click", () => showView(button.dataset.view));
   });
 
+  readAuthRedirectStatus();
   registerServiceWorker();
   renderAll();
   refreshCloudUser().then(renderCloud).catch(() => {});
+}
+
+function readAuthRedirectStatus() {
+  const params = new URLSearchParams(location.hash.replace(/^#/, ""));
+  const error = params.get("error_code") || params.get("error");
+  if (!error) return;
+
+  if (error === "otp_expired") {
+    cloudStatus = "That email link has expired or was already used. Send a fresh reset email from this Cloud tab.";
+  } else {
+    cloudStatus = params.get("error_description") || "The Supabase email link could not be used.";
+  }
+
+  if (history.replaceState) history.replaceState(null, "", location.pathname + location.search);
 }
 
 function isLocalApp() {
@@ -1373,6 +1388,11 @@ function renderCloud() {
           <button class="secondary" type="button" data-cloud-signup ${configured ? "" : "disabled"}>Create account</button>
           <button class="ghost" type="button" data-cloud-signout ${cloudUser ? "" : "disabled"}>Sign out</button>
         </div>
+        <div class="button-row">
+          <button class="secondary" type="button" data-cloud-reset-email ${configured ? "" : "disabled"}>Send reset email</button>
+          <button class="secondary" type="button" data-cloud-update-password ${cloudUser ? "" : "disabled"}>Set new password</button>
+        </div>
+        <p class="mini-label">For password reset: send the email, open the fresh link, enter a new password here, then set it.</p>
         <p class="mini-label">${cloudUser ? `Signed in as ${escapeHtml(cloudUser.email || cloudUser.id)}` : "Not signed in"}</p>
         <p class="note">${escapeHtml(cloudStatus)}</p>
       </article>
@@ -1426,6 +1446,8 @@ function bindCloudControls() {
   document.querySelector("[data-cloud-signin]").addEventListener("click", handleCloudSignin);
   document.querySelector("[data-cloud-signup]").addEventListener("click", handleCloudSignup);
   document.querySelector("[data-cloud-signout]").addEventListener("click", handleCloudSignout);
+  document.querySelector("[data-cloud-reset-email]").addEventListener("click", handleCloudResetEmail);
+  document.querySelector("[data-cloud-update-password]").addEventListener("click", handleCloudUpdatePassword);
   document.querySelector("[data-cloud-save]").addEventListener("click", saveCloudBackup);
   document.querySelector("[data-cloud-load]").addEventListener("click", loadCloudBackup);
   document.querySelector("#cloud [data-export-json]").addEventListener("click", exportJson);
@@ -1514,6 +1536,38 @@ async function handleCloudSignup() {
     cloudConfig.email = email;
     saveCloudConfig();
     cloudStatus = "Account created. If email confirmation is enabled, confirm the email, then return here to sign in.";
+  } catch (error) {
+    cloudStatus = error.message;
+  }
+  renderCloud();
+}
+
+async function handleCloudResetEmail() {
+  try {
+    const { email } = cloudAuthValues();
+    if (!email) throw new Error("Enter your email address first.");
+    const { error } = await getCloudClient().auth.resetPasswordForEmail(email, {
+      redirectTo: cloudRedirectUrl(),
+    });
+    if (error) throw error;
+    cloudConfig.email = email;
+    saveCloudConfig();
+    cloudStatus = "Password reset email sent. Open the newest email link, then return here to set a new password.";
+  } catch (error) {
+    cloudStatus = error.message;
+  }
+  renderCloud();
+}
+
+async function handleCloudUpdatePassword() {
+  try {
+    const { password } = cloudAuthValues();
+    if (!password || password.length < 8) throw new Error("Enter a new password of at least 8 characters.");
+    await refreshCloudUser();
+    if (!cloudUser) throw new Error("Open the fresh password reset email link first, then set the new password here.");
+    const { error } = await getCloudClient().auth.updateUser({ password });
+    if (error) throw error;
+    cloudStatus = "Password updated. You can sign in with the new password.";
   } catch (error) {
     cloudStatus = error.message;
   }
