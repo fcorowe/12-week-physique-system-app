@@ -16,6 +16,11 @@ const plan = {
     steps: "10,000-12,000/day",
     training: "Tue, Thu, Sat, Sun",
   },
+  baseline: {
+    waist: "85.5 cm",
+    waistDates: "2026-05-10 and 2026-05-11",
+    waistLabel: "Waist at navel",
+  },
   meals: ["Breakfast", "Morning snack", "Lunch", "Afternoon snack", "Dinner", "Evening snack"],
   workoutFueling: [
     {
@@ -349,6 +354,7 @@ function renderDashboard() {
       ${metricCard("Protein", plan.targets.protein, "Daily anchor.")}
       ${metricCard("Carbs", plan.targets.carbs, "Fuel lifting and Sunday conditioning.")}
       ${metricCard("Steps", plan.targets.steps, "Do not chase above 12k.")}
+      ${metricCard("Waist baseline", plan.baseline.waist, `${plan.baseline.waistLabel}; ${plan.baseline.waistDates}.`)}
     </div>
 
     <article class="card schedule-card">
@@ -1422,7 +1428,7 @@ function renderTracking() {
         <h2 class="section-title">Weekly Review</h2>
         <ul>
           <li>7-day average body weight.</li>
-          <li>Waist at navel.</li>
+          <li>Waist at navel; baseline ${plan.baseline.waist} on ${plan.baseline.waistDates}.</li>
           <li>Progress photos, same conditions.</li>
           <li>Training performance summary.</li>
           <li>Average sleep, steps, calories, and protein.</li>
